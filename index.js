@@ -1,21 +1,22 @@
 import console from 'console';
-import cons from 'consolidate';
-import koa from 'koa';
+import Koa from 'koa';
 import Router from 'koa-router';
 import process from 'process';
-import { async } from 'regenerator-runtime';
 
-const app = new koa();
+import schema from './schema';
+import graphHTTP from 'koa-graphql';
+
+const app = new Koa();
 const router = new Router();
 
-
-router.get('/', async ctx => {
-    ctx.body = `<h1> hello world </h1>`;
-})
+router.all('/graphql', graphHTTP({
+    schema,
+    graphiql: true,
+}));
 
 app.use(router.routes(), router.allowedMethods());
 
-const POST = process.env.POST || 8080;
+const POST = process.env.POST || 8081;
 
 
 app.listen(POST, () => {
